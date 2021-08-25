@@ -144,14 +144,14 @@ describe('TaskGenerator', function () {
 
   describe('Bad Path', function () {
     // All requests with status code of 400
-    it('returns 400 with no body', async()=>{
+    it('returns 400 with no body', async () => {
       const response = await requestSender.generateTasks(undefined);
 
       //assertions
       expect(response.status).toBe(httpStatusCodes.BAD_REQUEST);
     });
 
-    it('returns 400 on invalid body', async () =>{
+    it('returns 400 on invalid body', async () => {
       const reqBody = {
         jobId: 'not uuid',
         resourceId: 'string',
@@ -162,7 +162,7 @@ describe('TaskGenerator', function () {
 
       //assertions
       expect(response.status).toBe(httpStatusCodes.BAD_REQUEST);
-    })
+    });
   });
 
   describe('Sad Path', function () {
