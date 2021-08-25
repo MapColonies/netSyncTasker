@@ -1,3 +1,7 @@
+#local configs
+config/*local*.json
+helm/local
+
 # Logs
 logs
 *.log
@@ -107,3 +111,4 @@ dist
 # Jest
 jest_html_reporters.html
 reports
+report

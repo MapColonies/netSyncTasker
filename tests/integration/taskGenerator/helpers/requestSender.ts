@@ -11,10 +11,6 @@ export function init(): void {
   app = builder.build();
 }
 
-export async function getResource(): Promise<supertest.Response> {
-  return supertest.agent(app).get('/resourceName').set('Content-Type', 'application/json');
-}
-
-export async function createResource(): Promise<supertest.Response> {
-  return supertest.agent(app).post('/resourceName').set('Content-Type', 'application/json');
+export async function generateTasks(body: Record<string, unknown> | undefined): Promise<supertest.Response> {
+  return supertest.agent(app).post('/generateTasks').set('Content-Type', 'application/json').send(body);
 }

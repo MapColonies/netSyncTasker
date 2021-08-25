@@ -1,0 +1,171 @@
+import httpStatusCodes from 'http-status-codes';
+import { container } from 'tsyringe';
+import { getDiscreteMetadataMock } from '../../mocks/catalogClient';
+import { setValue as SetConfigValue, clear as clearConfig } from '../../mocks/config';
+import { enqueueTaskMock } from '../../mocks/JobManagerClient';
+import { encodeFootprintMock } from '../../mocks/tileRanger';
+
+import { registerTestValues } from '../testContainerConfig';
+import * as requestSender from './helpers/requestSender';
+
+describe('TaskGenerator', function () {
+  beforeEach(function () {
+    SetConfigValue('batchSize', 3);
+    registerTestValues();
+    requestSender.init();
+  });
+
+  afterEach(function () {
+    clearConfig();
+    container.clearInstances();
+  });
+
+  describe('Happy Path', function () {
+    it('should return 200 status code and generate task for every batch', async function () {
+      //test data
+      const testResourceId = 'test-layer';
+      const testResourceVersion = 'test-version';
+      const testJobId = '7bf72e2a-6e6d-4a2f-a6e2-e764268d1f0c';
+      const testFootprint = {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [-1, 0],
+            [0, 1],
+            [1, 0],
+            [-1, 0],
+          ],
+        ],
+      };
+      const testDiscreteLayer = {
+        metadata: {
+          resolution: 0.00274658203125, //zoom 8
+          footprint: testFootprint,
+        },
+      };
+      const testTileRanges = [
+        { minX: 0, minY: 2, maxX: 5, maxY: 4, zoom: 8 },
+        { minX: 0, minY: 6, maxX: 2, maxY: 8, zoom: 8 },
+        { minX: 0, minY: 8, maxX: 1, maxY: 11, zoom: 8 },
+      ];
+
+      //mocks
+      getDiscreteMetadataMock.mockResolvedValue(testDiscreteLayer);
+      encodeFootprintMock.mockReturnValue(testTileRanges);
+
+      //action
+      const reqBody = {
+        jobId: testJobId,
+        resourceId: testResourceId,
+        resourceVersion: testResourceVersion,
+      };
+      const response = await requestSender.generateTasks(reqBody);
+
+      //assertions
+      expect(response.status).toBe(httpStatusCodes.CREATED);
+      expect(getDiscreteMetadataMock).toHaveBeenCalledTimes(1);
+      expect(getDiscreteMetadataMock).toHaveBeenCalledWith(testResourceId, testResourceVersion);
+      expect(encodeFootprintMock).toHaveBeenCalledTimes(1);
+      expect(encodeFootprintMock).toHaveBeenCalledWith(testFootprint, 8);
+      expect(enqueueTaskMock).toHaveBeenCalledTimes(6);
+      expect(enqueueTaskMock.mock.calls).toEqual([
+        [
+          testJobId,
+          {
+            parameters: {
+              batch: [{ minX: 0, maxX: 3, minY: 2, maxY: 3, zoom: 8 }],
+              resourceId: testResourceId,
+              resourceVersion: testResourceVersion,
+            },
+          },
+        ],
+        [
+          testJobId,
+          {
+            parameters: {
+              batch: [
+                { minX: 3, maxX: 5, minY: 2, maxY: 3, zoom: 8 },
+                { minX: 0, maxX: 1, minY: 3, maxY: 4, zoom: 8 },
+              ],
+              resourceId: testResourceId,
+              resourceVersion: testResourceVersion,
+            },
+          },
+        ],
+        [
+          testJobId,
+          {
+            parameters: {
+              batch: [{ minX: 1, maxX: 4, minY: 3, maxY: 4, zoom: 8 }],
+              resourceId: testResourceId,
+              resourceVersion: testResourceVersion,
+            },
+          },
+        ],
+        [
+          testJobId,
+          {
+            parameters: {
+              batch: [
+                { minX: 4, maxX: 5, minY: 3, maxY: 4, zoom: 8 },
+                { minX: 0, maxX: 2, minY: 6, maxY: 7, zoom: 8 },
+              ],
+              resourceId: testResourceId,
+              resourceVersion: testResourceVersion,
+            },
+          },
+        ],
+        [
+          testJobId,
+          {
+            parameters: {
+              batch: [
+                { minX: 0, maxX: 2, minY: 7, maxY: 8, zoom: 8 },
+                { minX: 0, maxX: 1, minY: 8, maxY: 9, zoom: 8 },
+              ],
+              resourceId: testResourceId,
+              resourceVersion: testResourceVersion,
+            },
+          },
+        ],
+        [
+          testJobId,
+          {
+            parameters: {
+              batch: [{ minX: 0, maxX: 1, minY: 9, maxY: 11, zoom: 8 }],
+              resourceId: testResourceId,
+              resourceVersion: testResourceVersion,
+            },
+          },
+        ],
+      ]);
+    });
+  });
+
+  describe('Bad Path', function () {
+    // All requests with status code of 400
+    it('returns 400 with no body', async()=>{
+      const response = await requestSender.generateTasks(undefined);
+
+      //assertions
+      expect(response.status).toBe(httpStatusCodes.BAD_REQUEST);
+    });
+
+    it('returns 400 on invalid body', async () =>{
+      const reqBody = {
+        jobId: 'not uuid',
+        resourceId: 'string',
+        resourceVersion: 'string',
+      };
+
+      const response = await requestSender.generateTasks(reqBody);
+
+      //assertions
+      expect(response.status).toBe(httpStatusCodes.BAD_REQUEST);
+    })
+  });
+
+  describe('Sad Path', function () {
+    // All requests with status code 4XX-5XX
+  });
+});

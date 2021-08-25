@@ -9,7 +9,7 @@ import { Logger } from '@map-colonies/js-logger';
 import httpLogger from '@map-colonies/express-access-log-middleware';
 import { Services } from './common/constants';
 import { IConfig } from './common/interfaces';
-import { resourceNameRouterFactory } from './resourceName/routes/resourceNameRouter';
+import { taskGeneratorFactory } from './taskGenerator/routes/taskGeneratorRouter';
 
 @injectable()
 export class ServerBuilder {
@@ -34,8 +34,8 @@ export class ServerBuilder {
   }
 
   private buildRoutes(): void {
-    this.serverInstance.use('/resourceName', resourceNameRouterFactory(container));
     this.buildDocsRoutes();
+    this.serverInstance.use('/', taskGeneratorFactory(container));
   }
 
   private registerPreRoutesMiddleware(): void {

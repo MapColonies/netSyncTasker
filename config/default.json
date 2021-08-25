@@ -24,5 +24,16 @@
         "options": null
       }
     }
+  },
+  "batchSize": 1000,
+  "httpRetry": {
+    "attempts": 5,
+    "delay": "exponential",
+    "shouldResetTimeout": true
+  },
+  "serviceClients": {
+    "catalogUrl": "http://localhost",
+    "jobManagerUrl": "http://localhost",
+    "taskType": "syncUploadBatch"
   }
 }
