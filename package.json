@@ -1,7 +1,7 @@
 {
   "name": "net-sync-tasker",
   "version": "1.0.0",
-  "description": "This is template for map colonies typescript service",
+  "description": "This is Batched task generator for raster tile synchronization process",
   "main": "./src/index.ts",
   "scripts": {
     "test:unit": "jest --config=./tests/configurations/unit/jest.config.js",

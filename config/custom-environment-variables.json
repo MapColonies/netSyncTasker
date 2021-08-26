@@ -54,7 +54,9 @@
       }
     },
     "serviceClients": {
-      "catalogUrl": "SERVICE_CLIENTS_CATALOG_URL"
+      "catalogUrl": "SERVICE_CLIENTS_CATALOG_URL",
+      "jobManagerUrl": "SERVICE_CLIENTS_JOB_MANAGER_URL",
+      "taskType": "SERVICE_CLIENTS_TASK_TYPE"
     }
   }
 }
