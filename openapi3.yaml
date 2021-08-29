@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: service-name
+  title: net-sync-tasker
   description: basic template for map colonies service
   version: 1.0.0
   license:
@@ -8,32 +8,22 @@ info:
     url: https://opensource.org/licenses/MIT
 
 paths:
-  /resourceName:
-    get:
-      operationId: getResourceName
-      tags:
-        - resourceName
-      summary: gets the resource
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/resource'
+  /generateTasks:
     post:
-      operationId: createResource
+      operationId: generateTasks
       tags:
-        - resourceName
-      summary: creates a new record of type resource
+        - TaskGenerator
+      summary: creates batched tasks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createTasksPayload'
       responses:
         201:
           description: created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/resource'
-        400:
+        404:
           description: Bad Request
           content:
             application/json:
@@ -48,17 +38,17 @@ components:
       properties:
         message:
           type: string
-    resource:
+    createTasksPayload:
       type: object
       required:
-        - id
-        - name
-        - description
+        - jobId
+        - resourceId
+        - resourceVersion
       properties:
-        id:
-          type: number
-          format: int64
-        name:
+        jobId:
           type: string
-        description:
+          format: uuid
+        resourceId:
+          type: string
+        resourceVersion:
           type: string
