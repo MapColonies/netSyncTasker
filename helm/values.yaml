@@ -8,21 +8,21 @@ enabled: true
 environment: development
 replicaCount: 1
 initialDelaySeconds: 60
-nodePort: 30030 #for minikube deployment only
+nodePort: 30037 #for minikube deployment only
 
 cloudProvider:
   dockerRegistryUrl: my-registry-url.io
   flavor: openshift
 
 image:
-  repository: ts-server-boilerplate
+  repository: net-sync-tasker
   tag: 'latest'
 
 env:
-  port: 8080
+  port: 80
   targetPort: 8080
   protocol: TCP
-  logLevel: info
+  logLevel: warn
   logPrettyPrintEnabled: false
   responseCompressionEnabled: true
   requestPayloadLimit: 1mb
@@ -32,6 +32,17 @@ env:
   metrics:
     enabled: false
     url: http://localhost:55681/v1/metrics
+  batchSize: 1000
+  httpRetry:
+    attempts: 3
+    delay: 'exponential'
+    resetTimeout: true
+  serviceClients:
+    catalog:
+      url: http://localhost:30019
+    jobManager:
+      url: http://localhost:30010
+      taskType: syncUploadBatch
 
 resources:
   enabled: false
@@ -45,6 +56,7 @@ resources:
 
 route:
   enabled: true
+  host:
   path: /
 
 ingress:
