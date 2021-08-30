@@ -10,11 +10,11 @@ const configMock = {
   has: hasMock,
 } as IConfig;
 
-const init = ():void => {
+const init = (): void => {
   getMock.mockImplementation((key: string): unknown => {
     return keys[key] ?? config.get(key);
   });
-}
+};
 const setValue = (key: string, value: unknown): void => {
   keys[key] = value;
 };
