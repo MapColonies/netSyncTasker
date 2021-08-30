@@ -27,16 +27,30 @@ export class TaskManager {
     const zoomLevel = degreesPerPixelToZoomLevel(layer.metadata?.resolution as number);
     const batchGen = this.batcher.tileBatchGenerator(this.batchSize, footprint, zoomLevel);
     for (const batch of batchGen) {
-      //TODO: check if task exists?
       const parameters = {
         batch,
         resourceId,
         resourceVersion,
       };
-
+      const exists = await this.taskExists(jobId, parameters);
+      if (exists) {
+        this.logger.info(
+          `skipping creation of existing batch for job: ${jobId}, layer: ${resourceId}-${resourceVersion}, batch: ${JSON.stringify(batch)} `
+        );
+        continue;
+      }
       await this.jobsClient.enqueueTask(jobId, {
         parameters,
       });
     }
+  }
+
+  private async taskExists(jobId: string, parameters: Record<string, unknown>): Promise<boolean> {
+    const criteria = {
+      jobId,
+      parameters,
+    };
+    const tasks = await this.jobsClient.findTasks(criteria);
+    return tasks != undefined && tasks.length > 0;
   }
 }

@@ -2,7 +2,7 @@ import httpStatusCodes from 'http-status-codes';
 import { container } from 'tsyringe';
 import { getDiscreteMetadataMock } from '../../mocks/catalogClient';
 import { setValue as SetConfigValue, clear as clearConfig } from '../../mocks/config';
-import { enqueueTaskMock } from '../../mocks/JobManagerClient';
+import { enqueueTaskMock, findTasksMock } from '../../mocks/JobManagerClient';
 import { encodeFootprintMock } from '../../mocks/tileRanger';
 
 import { registerTestValues } from '../testContainerConfig';
@@ -18,6 +18,7 @@ describe('TaskGenerator', function () {
   afterEach(function () {
     clearConfig();
     container.clearInstances();
+    jest.resetAllMocks();
   });
 
   describe('Happy Path', function () {
@@ -139,6 +140,58 @@ describe('TaskGenerator', function () {
           },
         ],
       ]);
+    });
+
+    it('should return 200 and skip duplicate batches', async () => {
+      //test data
+      const testResourceId = 'test-layer';
+      const testResourceVersion = 'test-version';
+      const testJobId = '7bf72e2a-6e6d-4a2f-a6e2-e764268d1f0c';
+      const testFootprint = {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [-1, 0],
+            [0, 1],
+            [1, 0],
+            [-1, 0],
+          ],
+        ],
+      };
+      const testDiscreteLayer = {
+        metadata: {
+          resolution: 0.00274658203125, //zoom 8
+          footprint: testFootprint,
+        },
+      };
+      const testTileRanges = [{ minX: 0, minY: 0, maxX: 4, maxY: 1, zoom: 8 }];
+
+      //mocks
+      getDiscreteMetadataMock.mockResolvedValue(testDiscreteLayer);
+      encodeFootprintMock.mockReturnValue(testTileRanges);
+      findTasksMock.mockResolvedValueOnce(undefined).mockResolvedValueOnce([{}]);
+      //action
+      const reqBody = {
+        jobId: testJobId,
+        resourceId: testResourceId,
+        resourceVersion: testResourceVersion,
+      };
+      const response = await requestSender.generateTasks(reqBody);
+
+      //assertions
+      expect(response.status).toBe(httpStatusCodes.CREATED);
+      expect(getDiscreteMetadataMock).toHaveBeenCalledTimes(1);
+      expect(getDiscreteMetadataMock).toHaveBeenCalledWith(testResourceId, testResourceVersion);
+      expect(encodeFootprintMock).toHaveBeenCalledTimes(1);
+      expect(encodeFootprintMock).toHaveBeenCalledWith(testFootprint, 8);
+      expect(enqueueTaskMock).toHaveBeenCalledTimes(1);
+      expect(enqueueTaskMock).toHaveBeenCalledWith(testJobId, {
+        parameters: {
+          batch: [{ minX: 0, maxX: 3, minY: 0, maxY: 1, zoom: 8 }],
+          resourceId: testResourceId,
+          resourceVersion: testResourceVersion,
+        },
+      });
     });
   });
 
