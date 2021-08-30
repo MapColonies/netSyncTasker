@@ -8,6 +8,7 @@ const enqueueTaskMock = jest.fn();
 const updateTaskMock = jest.fn();
 const createJobMock = jest.fn();
 const updateJobMock = jest.fn();
+const findTasksMock = jest.fn();
 
 const jobManagerClientMock = {
   getTask: getTaskMock,
@@ -18,6 +19,7 @@ const jobManagerClientMock = {
   updateTask: updateTaskMock,
   createJob: createJobMock,
   updateJob: updateJobMock,
+  findTasks: findTasksMock,
 } as unknown as JobManagerClient;
 
 export {
@@ -30,4 +32,5 @@ export {
   updateJobMock,
   createJobMock,
   updateTaskMock,
+  findTasksMock,
 };

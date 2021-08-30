@@ -5,13 +5,14 @@ import jsLogger from '@map-colonies/js-logger';
 import { JobManagerClient } from '@map-colonies/mc-priority-queue';
 import { TileRanger } from '@map-colonies/mc-utils';
 import { Services } from '../../src/common/constants';
-import { configMock } from '../mocks/config';
+import { configMock, init as configInit } from '../mocks/config';
 import { jobManagerClientMock } from '../mocks/JobManagerClient';
 import { CatalogClient } from '../../src/clients/catalogClient';
 import { catalogClientMock } from '../mocks/catalogClient';
 import { tileRangerMock } from '../mocks/tileRanger';
 
 function registerTestValues(): void {
+  configInit();
   container.register(Services.CONFIG, { useValue: configMock });
   container.register(Services.LOGGER, { useValue: jsLogger({ enabled: false }) });
 
