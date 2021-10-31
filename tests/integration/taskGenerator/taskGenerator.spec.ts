@@ -21,35 +21,36 @@ describe('TaskGenerator', function () {
     jest.resetAllMocks();
   });
 
+  //test data
+  const testResourceId = 'test-layer';
+  const testResourceVersion = 'test-version';
+  const testJobId = '7bf72e2a-6e6d-4a2f-a6e2-e764268d1f0c';
+  const testLayerRelativePath = `${testResourceId}-${testResourceVersion}-testProductType`;
+  const testFootprint = {
+    type: 'Polygon',
+    coordinates: [
+      [
+        [-1, 0],
+        [0, 1],
+        [1, 0],
+        [-1, 0],
+      ],
+    ],
+  };
+  const testDiscreteLayer = {
+    metadata: {
+      resolution: 0.00274658203125, //zoom 8
+      footprint: testFootprint,
+    },
+  };
+  const testTileRanges = [
+    { minX: 0, minY: 2, maxX: 5, maxY: 4, zoom: 8 },
+    { minX: 0, minY: 6, maxX: 2, maxY: 8, zoom: 8 },
+    { minX: 0, minY: 8, maxX: 1, maxY: 11, zoom: 8 },
+  ];
+
   describe('Happy Path', function () {
     it('should return 200 status code and generate task for every batch', async function () {
-      //test data
-      const testResourceId = 'test-layer';
-      const testResourceVersion = 'test-version';
-      const testJobId = '7bf72e2a-6e6d-4a2f-a6e2-e764268d1f0c';
-      const testFootprint = {
-        type: 'Polygon',
-        coordinates: [
-          [
-            [-1, 0],
-            [0, 1],
-            [1, 0],
-            [-1, 0],
-          ],
-        ],
-      };
-      const testDiscreteLayer = {
-        metadata: {
-          resolution: 0.00274658203125, //zoom 8
-          footprint: testFootprint,
-        },
-      };
-      const testTileRanges = [
-        { minX: 0, minY: 2, maxX: 5, maxY: 4, zoom: 8 },
-        { minX: 0, minY: 6, maxX: 2, maxY: 8, zoom: 8 },
-        { minX: 0, minY: 8, maxX: 1, maxY: 11, zoom: 8 },
-      ];
-
       //mocks
       getDiscreteMetadataMock.mockResolvedValue(testDiscreteLayer);
       encodeFootprintMock.mockReturnValue(testTileRanges);
@@ -59,6 +60,7 @@ describe('TaskGenerator', function () {
         jobId: testJobId,
         resourceId: testResourceId,
         resourceVersion: testResourceVersion,
+        layerRelativePath: testLayerRelativePath,
       };
       const response = await requestSender.generateTasks(reqBody);
 
@@ -77,6 +79,7 @@ describe('TaskGenerator', function () {
               batch: [{ minX: 0, maxX: 3, minY: 2, maxY: 3, zoom: 8 }],
               resourceId: testResourceId,
               resourceVersion: testResourceVersion,
+              layerRelativePath: testLayerRelativePath,
             },
           },
         ],
@@ -90,6 +93,7 @@ describe('TaskGenerator', function () {
               ],
               resourceId: testResourceId,
               resourceVersion: testResourceVersion,
+              layerRelativePath: testLayerRelativePath,
             },
           },
         ],
@@ -100,6 +104,7 @@ describe('TaskGenerator', function () {
               batch: [{ minX: 1, maxX: 4, minY: 3, maxY: 4, zoom: 8 }],
               resourceId: testResourceId,
               resourceVersion: testResourceVersion,
+              layerRelativePath: testLayerRelativePath,
             },
           },
         ],
@@ -113,6 +118,7 @@ describe('TaskGenerator', function () {
               ],
               resourceId: testResourceId,
               resourceVersion: testResourceVersion,
+              layerRelativePath: testLayerRelativePath,
             },
           },
         ],
@@ -126,6 +132,7 @@ describe('TaskGenerator', function () {
               ],
               resourceId: testResourceId,
               resourceVersion: testResourceVersion,
+              layerRelativePath: testLayerRelativePath,
             },
           },
         ],
@@ -136,6 +143,7 @@ describe('TaskGenerator', function () {
               batch: [{ minX: 0, maxX: 1, minY: 9, maxY: 11, zoom: 8 }],
               resourceId: testResourceId,
               resourceVersion: testResourceVersion,
+              layerRelativePath: testLayerRelativePath,
             },
           },
         ],
@@ -143,38 +151,18 @@ describe('TaskGenerator', function () {
     });
 
     it('should return 200 and skip duplicate batches', async () => {
-      //test data
-      const testResourceId = 'test-layer';
-      const testResourceVersion = 'test-version';
-      const testJobId = '7bf72e2a-6e6d-4a2f-a6e2-e764268d1f0c';
-      const testFootprint = {
-        type: 'Polygon',
-        coordinates: [
-          [
-            [-1, 0],
-            [0, 1],
-            [1, 0],
-            [-1, 0],
-          ],
-        ],
-      };
-      const testDiscreteLayer = {
-        metadata: {
-          resolution: 0.00274658203125, //zoom 8
-          footprint: testFootprint,
-        },
-      };
-      const testTileRanges = [{ minX: 0, minY: 0, maxX: 4, maxY: 1, zoom: 8 }];
+      const testTileRanges2 = [{ minX: 0, minY: 0, maxX: 4, maxY: 1, zoom: 8 }];
 
       //mocks
       getDiscreteMetadataMock.mockResolvedValue(testDiscreteLayer);
-      encodeFootprintMock.mockReturnValue(testTileRanges);
+      encodeFootprintMock.mockReturnValue(testTileRanges2);
       findTasksMock.mockResolvedValueOnce(undefined).mockResolvedValueOnce([{}]);
       //action
       const reqBody = {
         jobId: testJobId,
         resourceId: testResourceId,
         resourceVersion: testResourceVersion,
+        layerRelativePath: testLayerRelativePath,
       };
       const response = await requestSender.generateTasks(reqBody);
 
@@ -190,6 +178,7 @@ describe('TaskGenerator', function () {
           batch: [{ minX: 0, maxX: 3, minY: 0, maxY: 1, zoom: 8 }],
           resourceId: testResourceId,
           resourceVersion: testResourceVersion,
+          layerRelativePath: reqBody.layerRelativePath,
         },
       });
     });
@@ -209,6 +198,7 @@ describe('TaskGenerator', function () {
         jobId: 'not uuid',
         resourceId: 'string',
         resourceVersion: 'string',
+        layerRelativePath: 'string',
       };
 
       const response = await requestSender.generateTasks(reqBody);
