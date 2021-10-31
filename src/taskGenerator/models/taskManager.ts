@@ -20,8 +20,9 @@ export class TaskManager {
     this.batchSize = config.get<number>('batchSize');
   }
 
-  public async createBatchedTasks(resourceId: string, resourceVersion: string, jobId: string): Promise<void> {
-    this.logger.info(`create batched tiles tasks for job: ${jobId}, layer: ${resourceId}-${resourceVersion}`);
+  public async createBatchedTasks(resourceId: string, resourceVersion: string, jobId: string, layerRelativePath: string): Promise<void> {
+    const logData = `job: ${jobId}, id: ${resourceId}, version: ${resourceVersion}, layerRelativePath: ${layerRelativePath}`;
+    this.logger.info(`create batched tiles tasks for ${logData}`);
     const layer = await this.catalog.getDiscreteMetadata(resourceId, resourceVersion);
     const footprint = layer.metadata?.footprint as Polygon | Feature<Polygon> | Feature<MultiPolygon>;
     const zoomLevel = degreesPerPixelToZoomLevel(layer.metadata?.resolution as number);
@@ -31,12 +32,11 @@ export class TaskManager {
         batch,
         resourceId,
         resourceVersion,
+        layerRelativePath,
       };
       const exists = await this.taskExists(jobId, parameters);
       if (exists) {
-        this.logger.info(
-          `skipping creation of existing batch for job: ${jobId}, layer: ${resourceId}-${resourceVersion}, batch: ${JSON.stringify(batch)} `
-        );
+        this.logger.info(`skipping creation of existing batch for ${logData}, batch: ${JSON.stringify(batch)}`);
         continue;
       }
       await this.jobsClient.enqueueTask(jobId, {
