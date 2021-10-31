@@ -60,7 +60,7 @@ describe('TaskGenerator', function () {
         jobId: testJobId,
         resourceId: testResourceId,
         resourceVersion: testResourceVersion,
-        layerRelativePath: testLayerRelativePath
+        layerRelativePath: testLayerRelativePath,
       };
       const response = await requestSender.generateTasks(reqBody);
 
@@ -79,7 +79,7 @@ describe('TaskGenerator', function () {
               batch: [{ minX: 0, maxX: 3, minY: 2, maxY: 3, zoom: 8 }],
               resourceId: testResourceId,
               resourceVersion: testResourceVersion,
-              layerRelativePath: testLayerRelativePath
+              layerRelativePath: testLayerRelativePath,
             },
           },
         ],
@@ -93,7 +93,7 @@ describe('TaskGenerator', function () {
               ],
               resourceId: testResourceId,
               resourceVersion: testResourceVersion,
-              layerRelativePath: testLayerRelativePath
+              layerRelativePath: testLayerRelativePath,
             },
           },
         ],
@@ -104,7 +104,7 @@ describe('TaskGenerator', function () {
               batch: [{ minX: 1, maxX: 4, minY: 3, maxY: 4, zoom: 8 }],
               resourceId: testResourceId,
               resourceVersion: testResourceVersion,
-              layerRelativePath: testLayerRelativePath
+              layerRelativePath: testLayerRelativePath,
             },
           },
         ],
@@ -118,7 +118,7 @@ describe('TaskGenerator', function () {
               ],
               resourceId: testResourceId,
               resourceVersion: testResourceVersion,
-              layerRelativePath: testLayerRelativePath
+              layerRelativePath: testLayerRelativePath,
             },
           },
         ],
@@ -132,7 +132,7 @@ describe('TaskGenerator', function () {
               ],
               resourceId: testResourceId,
               resourceVersion: testResourceVersion,
-              layerRelativePath: testLayerRelativePath
+              layerRelativePath: testLayerRelativePath,
             },
           },
         ],
@@ -143,7 +143,7 @@ describe('TaskGenerator', function () {
               batch: [{ minX: 0, maxX: 1, minY: 9, maxY: 11, zoom: 8 }],
               resourceId: testResourceId,
               resourceVersion: testResourceVersion,
-              layerRelativePath: testLayerRelativePath
+              layerRelativePath: testLayerRelativePath,
             },
           },
         ],
@@ -162,7 +162,7 @@ describe('TaskGenerator', function () {
         jobId: testJobId,
         resourceId: testResourceId,
         resourceVersion: testResourceVersion,
-        layerRelativePath: testLayerRelativePath
+        layerRelativePath: testLayerRelativePath,
       };
       const response = await requestSender.generateTasks(reqBody);
 
@@ -178,7 +178,7 @@ describe('TaskGenerator', function () {
           batch: [{ minX: 0, maxX: 3, minY: 0, maxY: 1, zoom: 8 }],
           resourceId: testResourceId,
           resourceVersion: testResourceVersion,
-          layerRelativePath: reqBody.layerRelativePath
+          layerRelativePath: reqBody.layerRelativePath,
         },
       });
     });
@@ -198,7 +198,7 @@ describe('TaskGenerator', function () {
         jobId: 'not uuid',
         resourceId: 'string',
         resourceVersion: 'string',
-        layerRelativePath: 'string'
+        layerRelativePath: 'string',
       };
 
       const response = await requestSender.generateTasks(reqBody);
