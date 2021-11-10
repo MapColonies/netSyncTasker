@@ -21,9 +21,9 @@ paths:
               $ref: '#/components/schemas/createTasksPayload'
       responses:
         '201':
-          description: created
+          description: Created
         '404':
-          description: Bad Request
+          description: Not Found
           content:
             application/json:
               schema:
