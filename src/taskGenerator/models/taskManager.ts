@@ -25,23 +25,27 @@ export class TaskManager {
     this.logger.info(`create batched tiles tasks for ${logData}`);
     const layer = await this.catalog.getDiscreteMetadata(resourceId, resourceVersion);
     const footprint = layer.metadata?.footprint as Polygon | Feature<Polygon> | Feature<MultiPolygon>;
-    const zoomLevel = degreesPerPixelToZoomLevel(layer.metadata?.resolution as number);
-    const batchGen = this.batcher.tileBatchGenerator(this.batchSize, footprint, zoomLevel);
-    for (const batch of batchGen) {
-      const parameters = {
-        batch,
-        resourceId,
-        resourceVersion,
-        layerRelativePath,
-      };
-      const exists = await this.taskExists(jobId, parameters);
-      if (exists) {
-        this.logger.info(`skipping creation of existing batch for ${logData}, batch: ${JSON.stringify(batch)}`);
-        continue;
+    const maxZoomLevel = degreesPerPixelToZoomLevel(layer.metadata?.resolution as number);
+
+    for (let zoomLevel = 0; zoomLevel <= maxZoomLevel; zoomLevel++) {
+      this.logger.debug(`Creating tile batch for zoom level ${zoomLevel}`);
+      const batchGen = this.batcher.tileBatchGenerator(this.batchSize, footprint, zoomLevel);
+      for (const batch of batchGen) {
+        const parameters = {
+          batch,
+          resourceId,
+          resourceVersion,
+          layerRelativePath,
+        };
+        const exists = await this.taskExists(jobId, parameters);
+        if (exists) {
+          this.logger.info(`skipping creation of existing batch for ${logData}, batch: ${JSON.stringify(batch)}`);
+          continue;
+        }
+        await this.jobsClient.enqueueTask(jobId, {
+          parameters,
+        });
       }
-      await this.jobsClient.enqueueTask(jobId, {
-        parameters,
-      });
     }
   }
 
