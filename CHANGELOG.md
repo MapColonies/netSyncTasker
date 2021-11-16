@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/MapColonies/netSyncTasker/compare/v1.1.0...v1.1.1) (2021-11-16)
+
+
+### Bug Fixes
+
+* create all zoom level tasks ([#6](https://github.com/MapColonies/netSyncTasker/issues/6)) ([442387f](https://github.com/MapColonies/netSyncTasker/commit/442387f6f43b574760795fb5bf5ffd24f714ef3c))
+
 ## 1.1.0 (2021-11-02)
 
 
