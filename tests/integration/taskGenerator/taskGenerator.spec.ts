@@ -8,14 +8,14 @@ import { encodeFootprintMock } from '../../mocks/tileRanger';
 import { registerTestValues } from '../testContainerConfig';
 import * as requestSender from './helpers/requestSender';
 
-describe('TaskGenerator', function () {
-  beforeEach(function () {
+describe('TaskGenerator', function() {
+  beforeEach(function() {
     SetConfigValue('batchSize', 3);
     registerTestValues();
     requestSender.init();
   });
 
-  afterEach(function () {
+  afterEach(function() {
     clearConfig();
     container.clearInstances();
     jest.resetAllMocks();
@@ -48,9 +48,10 @@ describe('TaskGenerator', function () {
     { minX: 0, minY: 6, maxX: 2, maxY: 8, zoom: 8 },
     { minX: 0, minY: 8, maxX: 1, maxY: 11, zoom: 8 },
   ];
+  const taskTypeName = 'taskTypeName';
 
-  describe('Happy Path', function () {
-    it('should return 200 status code and generate task for every batch', async function () {
+  describe('Happy Path', function() {
+    it('should return 200 status code and generate task for every batch', async function() {
       //mocks
       getDiscreteMetadataMock.mockResolvedValue(testDiscreteLayer);
       encodeFootprintMock.mockReturnValue(testTileRanges);
@@ -75,6 +76,7 @@ describe('TaskGenerator', function () {
         [
           testJobId,
           {
+            type: taskTypeName,
             parameters: {
               batch: [{ minX: 0, maxX: 3, minY: 2, maxY: 3, zoom: 0 }],
               resourceId: testResourceId,
@@ -86,6 +88,7 @@ describe('TaskGenerator', function () {
         [
           testJobId,
           {
+            type: taskTypeName,
             parameters: {
               batch: [
                 { minX: 3, maxX: 5, minY: 2, maxY: 3, zoom: 0 },
@@ -100,6 +103,7 @@ describe('TaskGenerator', function () {
         [
           testJobId,
           {
+            type: taskTypeName,
             parameters: {
               batch: [{ minX: 1, maxX: 4, minY: 3, maxY: 4, zoom: 0 }],
               resourceId: testResourceId,
@@ -111,6 +115,7 @@ describe('TaskGenerator', function () {
         [
           testJobId,
           {
+            type: taskTypeName,
             parameters: {
               batch: [
                 { minX: 4, maxX: 5, minY: 3, maxY: 4, zoom: 0 },
@@ -125,6 +130,7 @@ describe('TaskGenerator', function () {
         [
           testJobId,
           {
+            type: taskTypeName,
             parameters: {
               batch: [
                 { minX: 0, maxX: 2, minY: 7, maxY: 8, zoom: 0 },
@@ -139,6 +145,7 @@ describe('TaskGenerator', function () {
         [
           testJobId,
           {
+            type: taskTypeName,
             parameters: {
               batch: [{ minX: 0, maxX: 1, minY: 9, maxY: 11, zoom: 0 }],
               resourceId: testResourceId,
@@ -174,6 +181,7 @@ describe('TaskGenerator', function () {
       expect(encodeFootprintMock).toHaveBeenLastCalledWith(testFootprint, 8);
       expect(enqueueTaskMock).toHaveBeenCalledTimes(1);
       expect(enqueueTaskMock).toHaveBeenCalledWith(testJobId, {
+        type: taskTypeName,
         parameters: {
           batch: [{ minX: 0, maxX: 3, minY: 0, maxY: 1, zoom: 0 }],
           resourceId: testResourceId,
@@ -184,7 +192,7 @@ describe('TaskGenerator', function () {
     });
   });
 
-  describe('Bad Path', function () {
+  describe('Bad Path', function() {
     // All requests with status code of 400
     it('returns 400 with no body', async () => {
       const response = await requestSender.generateTasks(undefined);
@@ -208,7 +216,7 @@ describe('TaskGenerator', function () {
     });
   });
 
-  describe('Sad Path', function () {
+  describe('Sad Path', function() {
     // All requests with status code 4XX-5XX
   });
 });

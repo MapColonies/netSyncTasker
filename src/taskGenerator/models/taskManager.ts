@@ -10,14 +10,17 @@ import { TileBatcher } from './tileBatcher';
 @singleton()
 export class TaskManager {
   private readonly batchSize: number;
+  private readonly taskType: string;
+
   public constructor(
     private readonly catalog: CatalogClient,
     private readonly batcher: TileBatcher,
     @inject(Services.CONFIG) config: IConfig,
     private readonly jobsClient: JobManagerClient,
-    @inject(Services.LOGGER) private readonly logger: ILogger
+    @inject(Services.LOGGER) private readonly logger: ILogger,
   ) {
     this.batchSize = config.get<number>('batchSize');
+    this.taskType = config.get<string>('serviceClients.taskType');
   }
 
   public async createBatchedTasks(resourceId: string, resourceVersion: string, jobId: string, layerRelativePath: string): Promise<void> {
@@ -26,7 +29,6 @@ export class TaskManager {
     const layer = await this.catalog.getDiscreteMetadata(resourceId, resourceVersion);
     const footprint = layer.metadata?.footprint as Polygon | Feature<Polygon> | Feature<MultiPolygon>;
     const maxZoomLevel = degreesPerPixelToZoomLevel(layer.metadata?.resolution as number);
-
     for (let zoomLevel = 0; zoomLevel <= maxZoomLevel; zoomLevel++) {
       this.logger.debug(`Creating tile batch for zoom level ${zoomLevel}`);
       const batchGen = this.batcher.tileBatchGenerator(this.batchSize, footprint, zoomLevel);
@@ -43,6 +45,7 @@ export class TaskManager {
           continue;
         }
         await this.jobsClient.enqueueTask(jobId, {
+          type: this.taskType,
           parameters,
         });
       }
@@ -52,6 +55,7 @@ export class TaskManager {
   private async taskExists(jobId: string, parameters: Record<string, unknown>): Promise<boolean> {
     const criteria = {
       jobId,
+      type: this.taskType,
       parameters,
     };
     const tasks = await this.jobsClient.findTasks(criteria);

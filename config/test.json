@@ -1,1 +1,7 @@
-{}
+{
+  "serviceClients": {
+    "catalogUrl": "http://localhost",
+    "jobManagerUrl": "http://localhost",
+    "taskType": "taskTypeName"
+  }
+}
