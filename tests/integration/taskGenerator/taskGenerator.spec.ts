@@ -8,14 +8,14 @@ import { encodeFootprintMock } from '../../mocks/tileRanger';
 import { registerTestValues } from '../testContainerConfig';
 import * as requestSender from './helpers/requestSender';
 
-describe('TaskGenerator', function() {
-  beforeEach(function() {
+describe('TaskGenerator', function () {
+  beforeEach(function () {
     SetConfigValue('batchSize', 3);
     registerTestValues();
     requestSender.init();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     clearConfig();
     container.clearInstances();
     jest.resetAllMocks();
@@ -50,8 +50,8 @@ describe('TaskGenerator', function() {
   ];
   const taskTypeName = 'taskTypeName';
 
-  describe('Happy Path', function() {
-    it('should return 200 status code and generate task for every batch', async function() {
+  describe('Happy Path', function () {
+    it('should return 200 status code and generate task for every batch', async function () {
       //mocks
       getDiscreteMetadataMock.mockResolvedValue(testDiscreteLayer);
       encodeFootprintMock.mockReturnValue(testTileRanges);
@@ -192,7 +192,7 @@ describe('TaskGenerator', function() {
     });
   });
 
-  describe('Bad Path', function() {
+  describe('Bad Path', function () {
     // All requests with status code of 400
     it('returns 400 with no body', async () => {
       const response = await requestSender.generateTasks(undefined);
@@ -216,7 +216,7 @@ describe('TaskGenerator', function() {
     });
   });
 
-  describe('Sad Path', function() {
+  describe('Sad Path', function () {
     // All requests with status code 4XX-5XX
   });
 });

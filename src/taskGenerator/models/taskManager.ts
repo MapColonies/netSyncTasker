@@ -17,7 +17,7 @@ export class TaskManager {
     private readonly batcher: TileBatcher,
     @inject(Services.CONFIG) config: IConfig,
     private readonly jobsClient: JobManagerClient,
-    @inject(Services.LOGGER) private readonly logger: ILogger,
+    @inject(Services.LOGGER) private readonly logger: ILogger
   ) {
     this.batchSize = config.get<number>('batchSize');
     this.taskType = config.get<string>('serviceClients.taskType');
