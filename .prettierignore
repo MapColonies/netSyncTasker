@@ -1,4 +1,5 @@
 dist
+openapi3.yaml
 .github
 .gitignore
 CHANGELOG.md
