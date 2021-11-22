@@ -42,7 +42,7 @@ env:
       url: http://localhost:30019
     jobManager:
       url: http://localhost:30010
-      taskType: syncUploadBatch
+      taskType: tilesSync
 
 resources:
   enabled: false

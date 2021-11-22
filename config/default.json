@@ -34,6 +34,6 @@
   "serviceClients": {
     "catalogUrl": "http://localhost",
     "jobManagerUrl": "http://localhost",
-    "taskType": "syncUploadBatch"
+    "taskType": "tilesSync"
   }
 }
