@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/MapColonies/netSyncTasker/compare/v1.1.3...v2.0.0) (2021-12-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* add target parameter to GenerateTasks API (#10)
+
+### Features
+
+* add target parameter to GenerateTasks API ([#10](https://github.com/MapColonies/netSyncTasker/issues/10)) ([4210ddc](https://github.com/MapColonies/netSyncTasker/commit/4210ddcef5286c35c73650ec75e11bdbf3c474d1))
+
 ### [1.1.2](https://github.com/MapColonies/netSyncTasker/compare/v1.1.1...v1.1.2) (2021-11-16)
 
 ### [1.1.1](https://github.com/MapColonies/netSyncTasker/compare/v1.1.0...v1.1.1) (2021-11-16)
