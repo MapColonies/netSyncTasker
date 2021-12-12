@@ -196,7 +196,7 @@ describe('TaskGenerator', function () {
           resourceId: testResourceId,
           resourceVersion: testResourceVersion,
           layerRelativePath: reqBody.layerRelativePath,
-          target: reqBody.target
+          target: reqBody.target,
         },
       });
     });
@@ -217,7 +217,7 @@ describe('TaskGenerator', function () {
         resourceId: 'string',
         resourceVersion: 'string',
         layerRelativePath: 'string',
-        target: 'string'
+        target: 'string',
       };
 
       const response = await requestSender.generateTasks(reqBody);
