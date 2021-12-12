@@ -23,8 +23,14 @@ export class TaskManager {
     this.taskType = config.get<string>('serviceClients.taskType');
   }
 
-  public async createBatchedTasks(resourceId: string, resourceVersion: string, jobId: string, layerRelativePath: string): Promise<void> {
-    const logData = `job: ${jobId}, id: ${resourceId}, version: ${resourceVersion}, layerRelativePath: ${layerRelativePath}`;
+  public async createBatchedTasks(
+    resourceId: string,
+    resourceVersion: string,
+    jobId: string,
+    layerRelativePath: string,
+    target: string
+  ): Promise<void> {
+    const logData = `job: ${jobId}, id: ${resourceId}, version: ${resourceVersion}, layerRelativePath: ${layerRelativePath}, target: ${target}`;
     this.logger.info(`create batched tiles tasks for ${logData}`);
     const layer = await this.catalog.getDiscreteMetadata(resourceId, resourceVersion);
     const footprint = layer.metadata?.footprint as Polygon | Feature<Polygon> | Feature<MultiPolygon>;
@@ -38,6 +44,7 @@ export class TaskManager {
           resourceId,
           resourceVersion,
           layerRelativePath,
+          target,
         };
         const exists = await this.taskExists(jobId, parameters);
         if (exists) {

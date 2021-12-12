@@ -10,6 +10,7 @@ interface IGenerateTasksRequest {
   resourceId: string;
   resourceVersion: string;
   layerRelativePath: string;
+  target: string;
 }
 
 type GenerateTasksHandler = RequestHandler<undefined, undefined, IGenerateTasksRequest>;
@@ -20,7 +21,13 @@ export class TaskGeneratorController {
 
   public generateTasks: GenerateTasksHandler = async (req, res, next) => {
     try {
-      await this.manager.createBatchedTasks(req.body.resourceId, req.body.resourceVersion, req.body.jobId, req.body.layerRelativePath);
+      await this.manager.createBatchedTasks(
+        req.body.resourceId,
+        req.body.resourceVersion,
+        req.body.jobId,
+        req.body.layerRelativePath,
+        req.body.target
+      );
       return res.sendStatus(httpStatus.CREATED);
     } catch (err) {
       next(err);

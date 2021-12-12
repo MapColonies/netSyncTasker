@@ -46,6 +46,7 @@ components:
         - resourceId
         - resourceVersion
         - layerRelativePath
+        - target
       properties:
         jobId:
           type: string
@@ -55,4 +56,6 @@ components:
         resourceVersion:
           type: string
         layerRelativePath:
+          type: string
+        target:
           type: string
