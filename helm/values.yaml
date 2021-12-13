@@ -12,11 +12,11 @@ nodePort: 30037 #for minikube deployment only
 
 cloudProvider:
   dockerRegistryUrl: my-registry-url.io
+  imagePullSecretName: 'my-registry-secret'
   flavor: openshift
 
 image:
   repository: net-sync-tasker
-  imagePullSecretName: 'my-registry-secret'
   tag: 'latest'
 
 env:
