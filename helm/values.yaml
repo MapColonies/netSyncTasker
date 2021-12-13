@@ -16,6 +16,7 @@ cloudProvider:
 
 image:
   repository: net-sync-tasker
+  imagePullSecretName: 'my-registry-secret'
   tag: 'latest'
 
 env:
