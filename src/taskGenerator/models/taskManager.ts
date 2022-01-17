@@ -1,11 +1,10 @@
 import { inject, singleton } from 'tsyringe';
 import { Feature, MultiPolygon, Polygon } from '@turf/turf';
-import { degreesPerPixelToZoomLevel, ILogger } from '@map-colonies/mc-utils';
+import { degreesPerPixelToZoomLevel, ILogger, TileRanger, tileBatchGenerator } from '@map-colonies/mc-utils';
 import { JobManagerClient } from '@map-colonies/mc-priority-queue';
 import { CatalogClient } from '../../clients/catalogClient';
 import { Services } from '../../common/constants';
 import { IConfig } from '../../common/interfaces';
-import { TileBatcher } from './tileBatcher';
 
 @singleton()
 export class TaskManager {
@@ -14,7 +13,7 @@ export class TaskManager {
 
   public constructor(
     private readonly catalog: CatalogClient,
-    private readonly batcher: TileBatcher,
+    private readonly ranger: TileRanger,
     @inject(Services.CONFIG) config: IConfig,
     private readonly jobsClient: JobManagerClient,
     @inject(Services.LOGGER) private readonly logger: ILogger
@@ -37,7 +36,8 @@ export class TaskManager {
     const maxZoomLevel = degreesPerPixelToZoomLevel(layer.metadata?.resolution as number);
     for (let zoomLevel = 0; zoomLevel <= maxZoomLevel; zoomLevel++) {
       this.logger.debug(`Creating tile batch for zoom level ${zoomLevel}`);
-      const batchGen = this.batcher.tileBatchGenerator(this.batchSize, footprint, zoomLevel);
+      const rangeGen = this.ranger.encodeFootprint(footprint, zoomLevel);
+      const batchGen = tileBatchGenerator(this.batchSize, rangeGen);
       for (const batch of batchGen) {
         const parameters = {
           batch,

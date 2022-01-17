@@ -80,7 +80,7 @@ describe('TaskGenerator', function () {
           {
             type: taskTypeName,
             parameters: {
-              batch: [{ minX: 0, maxX: 3, minY: 2, maxY: 3, zoom: 0 }],
+              batch: [{ minX: 0, maxX: 3, minY: 2, maxY: 3, zoom: 8 }],
               resourceId: testResourceId,
               resourceVersion: testResourceVersion,
               layerRelativePath: testLayerRelativePath,
@@ -94,8 +94,8 @@ describe('TaskGenerator', function () {
             type: taskTypeName,
             parameters: {
               batch: [
-                { minX: 3, maxX: 5, minY: 2, maxY: 3, zoom: 0 },
-                { minX: 0, maxX: 1, minY: 3, maxY: 4, zoom: 0 },
+                { minX: 3, maxX: 5, minY: 2, maxY: 3, zoom: 8 },
+                { minX: 0, maxX: 1, minY: 3, maxY: 4, zoom: 8 },
               ],
               resourceId: testResourceId,
               resourceVersion: testResourceVersion,
@@ -109,7 +109,7 @@ describe('TaskGenerator', function () {
           {
             type: taskTypeName,
             parameters: {
-              batch: [{ minX: 1, maxX: 4, minY: 3, maxY: 4, zoom: 0 }],
+              batch: [{ minX: 1, maxX: 4, minY: 3, maxY: 4, zoom: 8 }],
               resourceId: testResourceId,
               resourceVersion: testResourceVersion,
               layerRelativePath: testLayerRelativePath,
@@ -123,8 +123,8 @@ describe('TaskGenerator', function () {
             type: taskTypeName,
             parameters: {
               batch: [
-                { minX: 4, maxX: 5, minY: 3, maxY: 4, zoom: 0 },
-                { minX: 0, maxX: 2, minY: 6, maxY: 7, zoom: 0 },
+                { minX: 4, maxX: 5, minY: 3, maxY: 4, zoom: 8 },
+                { minX: 0, maxX: 2, minY: 6, maxY: 7, zoom: 8 },
               ],
               resourceId: testResourceId,
               resourceVersion: testResourceVersion,
@@ -139,8 +139,8 @@ describe('TaskGenerator', function () {
             type: taskTypeName,
             parameters: {
               batch: [
-                { minX: 0, maxX: 2, minY: 7, maxY: 8, zoom: 0 },
-                { minX: 0, maxX: 1, minY: 8, maxY: 9, zoom: 0 },
+                { minX: 0, maxX: 2, minY: 7, maxY: 8, zoom: 8 },
+                { minX: 0, maxX: 1, minY: 8, maxY: 9, zoom: 8 },
               ],
               resourceId: testResourceId,
               resourceVersion: testResourceVersion,
@@ -154,7 +154,7 @@ describe('TaskGenerator', function () {
           {
             type: taskTypeName,
             parameters: {
-              batch: [{ minX: 0, maxX: 1, minY: 9, maxY: 11, zoom: 0 }],
+              batch: [{ minX: 0, maxX: 1, minY: 9, maxY: 11, zoom: 8 }],
               resourceId: testResourceId,
               resourceVersion: testResourceVersion,
               layerRelativePath: testLayerRelativePath,
@@ -192,7 +192,7 @@ describe('TaskGenerator', function () {
       expect(enqueueTaskMock).toHaveBeenCalledWith(testJobId, {
         type: taskTypeName,
         parameters: {
-          batch: [{ minX: 0, maxX: 3, minY: 0, maxY: 1, zoom: 0 }],
+          batch: [{ minX: 0, maxX: 3, minY: 0, maxY: 1, zoom: 8 }],
           resourceId: testResourceId,
           resourceVersion: testResourceVersion,
           layerRelativePath: reqBody.layerRelativePath,
