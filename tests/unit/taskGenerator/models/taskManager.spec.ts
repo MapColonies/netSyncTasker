@@ -1,5 +1,4 @@
 import jsLogger from '@map-colonies/js-logger';
-import * as utils from '@map-colonies/mc-utils';
 import { TaskManager } from '../../../../src/taskGenerator/models/taskManager';
 import { catalogClientMock, getDiscreteMetadataMock } from '../../../mocks/catalogClient';
 import { tileRangerMock, encodeFootprintMock } from '../../../mocks/tileRanger';
