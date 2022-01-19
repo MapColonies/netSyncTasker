@@ -21,7 +21,7 @@ authentication:
 local:
   certs:
     ca: "certs/ca.crt"
-    ssl: "certs/ssl.crt"
+    ssl: "certs/openssl.cnf"
 
 enabled: true
 environment: development
