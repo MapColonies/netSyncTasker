@@ -33,7 +33,7 @@ export class TaskManager {
     this.logger.info(`create batched tiles tasks for ${logData}`);
     const layer = await this.catalog.getDiscreteMetadata(resourceId, resourceVersion);
     const footprint = layer.metadata?.footprint as Polygon | Feature<Polygon> | Feature<MultiPolygon>;
-    const maxZoomLevel = degreesPerPixelToZoomLevel(layer.metadata?.resolution as number);
+    const maxZoomLevel = degreesPerPixelToZoomLevel(layer.metadata?.maxResolutionDeg as number);
     for (let zoomLevel = 0; zoomLevel <= maxZoomLevel; zoomLevel++) {
       this.logger.debug(`Creating tile batch for zoom level ${zoomLevel}`);
       const rangeGen = this.ranger.encodeFootprint(footprint, zoomLevel);
