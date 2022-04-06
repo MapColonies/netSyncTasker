@@ -37,14 +37,14 @@ describe('taskManager', () => {
   };
   const testDiscreteLayer = {
     metadata: {
-      resolution: 0.00274658203125, //zoom 8
+      maxResolutionDeg: 0.00274658203125, //zoom 8
       footprint: testFootprint,
     },
   };
   const testTileRanges = [{ minX: 0, minY: 2, maxX: 5, maxY: 4, zoom: 8 }];
 
   describe('createBatchedTasks', () => {
-    it('t', async () => {
+    it('Test createBatchedTasks creats tasks correctly', async () => {
       findTasksMock.mockResolvedValue(undefined);
       getDiscreteMetadataMock.mockResolvedValue(testDiscreteLayer);
       enqueueTaskMock.mockResolvedValue(undefined);

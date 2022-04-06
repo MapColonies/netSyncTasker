@@ -40,7 +40,7 @@ describe('TaskGenerator', function () {
   };
   const testDiscreteLayer = {
     metadata: {
-      resolution: 0.00274658203125, //zoom 8
+      maxResolutionDeg: 0.00274658203125, //zoom 8
       footprint: testFootprint,
     },
   };
