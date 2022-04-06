@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/MapColonies/netSyncTasker/compare/v2.0.2...v2.1.0) (2022-04-06)
+
+
+### Features
+
+* update to new models ([#15](https://github.com/MapColonies/netSyncTasker/issues/15)) ([f668643](https://github.com/MapColonies/netSyncTasker/commit/f6686436fc4871013affd6c6d460208d091c9154))
+
 ### [2.0.2](https://github.com/MapColonies/netSyncTasker/compare/v2.0.1...v2.0.2) (2022-01-30)
 
 ### [2.0.1](https://github.com/MapColonies/netSyncTasker/compare/v2.0.0...v2.0.1) (2022-01-18)
